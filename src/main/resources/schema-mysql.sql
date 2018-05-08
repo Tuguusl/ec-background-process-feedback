@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `process` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `client` VARCHAR(10),
   `name` VARCHAR(255) NOT NULL,
+  `app` VARCHAR(255) NOT NULL,
   `current_step` int(20) NOT NULL,
   `total_steps` int(20) NOT NULL,
   `status` ENUM('RUNNING', 'ERROR', 'SUCCESS') NOT NULL DEFAULT 'RUNNING',

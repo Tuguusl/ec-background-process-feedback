@@ -23,6 +23,9 @@ public class Process {
     @Column(nullable=false)
     private String name;
 
+    @Column(nullable=false)
+    private String app;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
     private ProcessStatus status;
@@ -81,6 +84,14 @@ public class Process {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
     }
 
     public ProcessStatus getStatus() {
