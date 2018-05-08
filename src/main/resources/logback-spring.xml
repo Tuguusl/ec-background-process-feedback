@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <include resource="logback-cloudwatch.xml" />
+
+    <springProfile name="preproduction">
+        <logger name="com.txrlabs" level="debug">
+            <appender-ref ref="CLOUDWATCH" />
+        </logger>
+        <root level="info">
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="production">
+
+        <springProperty name="logGroup" source="logging.cloudwatch.log-group"/>
+        <springProperty name="logStream" source="logging.cloudwatch.log-stream"/>
+        <springProperty name="awsRegion" source="logging.cloudwatch.region"/>
+        <springProperty name="app" source="spring.application.name"/>
+
+        <appender name="CLOUDWATCH" class="com.intapp.platform.logging.logback.appender.AmazonCloudWatchAppender">
+            <region>${awsRegion}</region>
+            <logGroup>${logGroup:-}</logGroup>
+            <logStream>${logStream:-}</logStream>
+
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>
+                    {
+                    "level": "%level",
+                    "X-Span-Export": "%X{X-Span-Export:-}",
+                    "X-B3-SpanId": "%X{X-B3-SpanId:-}",
+                    "X-B3-TraceId": "%X{X-B3-TraceId:-}",
+                    "service": "${app:-}",
+                    "logger": "%logger",
+                    "namespace": "${logGroup:-}",
+                    "pid": "${PID:-}",
+                    "thread": "%thread",
+                    "message": "%replace(%replace(%replace(%msg){'\n','\\n'}){'\t','\\t'}){'"','\\"'}",
+                    "throwable": "%replace(%replace(%replace(%ex){'\n','\\n'}){'\t','\\t'}){'"','\\"'}%nopex"
+                    }
+                </pattern>
+            </layout>
+        </appender>
+
+        <logger name="org.springframework.cloud.config.client.ConfigServicePropertySourceLocator" level="INFO" additivity="false">
+        </logger>
+        <root level="info">
+            <appender-ref ref="CLOUDWATCH" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <root level="info">
+    <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

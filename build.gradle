@@ -1,0 +1,133 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("se.transmode.gradle:gradle-docker:1.2")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: "docker"
+
+group = 'com.txrlabs.microservice.ecommerce'
+project.ext.dockerusername = "treexor"
+def versionEnvPrefix = project.hasProperty("prod") ? "1.1." : "1.0."
+version versionEnvPrefix + (System.getenv("BUILD_NUMBER") ?: "0-SNAPSHOT")
+project.ext.bindPort= "8080"
+project.ext.spring_config_url= (System.getenv("SPRING_CLOUD_CONFIG_URI")) ?: "http://127.0.0.1:8888"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+	maven {
+		url 'https://nexus.tguhost.com/content/repositories/releases'
+		credentials {
+			username "$mavenUser"
+			password "$mavenPassword"
+		}
+	}
+	maven {
+		name 'thirdparty'
+		url 'https://nexus.tguhost.com/content/repositories/thirdparty'
+		credentials {
+			username "$mavenUser"
+			password "$mavenPassword"
+		}
+	}
+}
+
+ext {
+	springCloudVersion = 'Edgware.RELEASE'
+}
+
+def getTreexorStarterPreauthVersion() {
+	File versionFile = new File('spring-boot-starter-treexor-security-preauth/version')
+	if (versionFile.exists())
+		versionFile.text
+	else
+		'1.1.38'
+}
+
+def getClientAccountsClientVersion() {
+	File versionFile = new File('ec-client-accounts-client/version')
+	if (versionFile.exists())
+		versionFile.text
+	else
+		'2.1.119'
+}
+
+
+dependencies {
+	compile('org.springframework.cloud:spring-cloud-starter-config')
+	compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+	compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.9-rc'
+	compile('org.springframework.boot:spring-boot-starter-security')
+
+	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
+	compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
+
+	compile("com.txrlabs.microservices:spring-boot-starter-treexor-metrics:1.1.17")
+	compile("com.txrlabs.microservices:cloudwatch-logging-spring-boot-starter:0.9")
+
+	compile('org.springframework.security:spring-security-data')
+	compile group: 'com.txrlabs.microservices',   name: 'ec-client-accounts-client2', version: getClientAccountsClientVersion()
+	compile group: 'com.txrlabs.microservices', name: 'spring-boot-starter-treexor-security-preauth', version: getTreexorStarterPreauthVersion()
+
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+
+	dependencies {
+		dependency "cglib:cglib-nodep:3.2.0"
+	}
+}
+
+task createCiFile {
+	ext.versionfile = new File('.ci-env-properties').withWriter { out ->
+		out.println 'APP_VERSION=' + project.version
+		out.println 'ARTIFACT=' + project.name + '-' + project.version
+		out.println 'APP_GROUP=' + project.group
+		out.println 'APP_NAME=' + project.name
+		out.println 'APP_PACKAGING=jar'
+		out.println 'DOKER_HUB_GROUP=' + project.ext.dockerusername
+	}
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+	push = project.hasProperty("push")
+	applicationName = "${project.name}"
+	tagVersion = "${project.version}"
+	tag = "${project.dockerusername}/${applicationName}"
+	dockerfile = file("Dockerfile")
+	addFile("${applicationName}-${jar.version}.jar", "app.jar")
+	runCommand("sh -c 'touch /app.jar'")
+	entryPoint(["java","-Xmx128m","-Xms128m","-jar","/app.jar"])
+	doFirst {
+		copy {
+			from jar
+			into stageDir
+		}
+	}
+}

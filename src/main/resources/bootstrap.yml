@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: ec-background-process-feedback
+
+management:
+  security:
+    enabled: false
+
+logging:
+  cloudwatch:
+    log-group: ecommerce-production
+    log-stream: ecommerce.ec-background-process-feedback
+    region: us-west-2

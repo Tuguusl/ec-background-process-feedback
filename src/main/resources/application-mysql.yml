@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    driver_class_name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    test_on_borrow: true
+    validation_query: SELECT 1
+    url: jdbc:mysql://localhost/ec_background_process_feedback
