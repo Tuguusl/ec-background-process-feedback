@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS `process` (
   PRIMARY KEY (`id`),
   INDEX `idx_client` (`client`),
   INDEX `idx_name` (`name`),
+  INDEX `idx_app` (`app`),
   INDEX `idx_status` (`status`),
   INDEX `idx_date_created` (`date_created`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
