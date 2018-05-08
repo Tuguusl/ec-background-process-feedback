@@ -40,7 +40,8 @@
                     "pid": "${PID:-}",
                     "thread": "%thread",
                     "message": "%replace(%replace(%replace(%msg){'\n','\\n'}){'\t','\\t'}){'"','\\"'}",
-                    "throwable": "%replace(%replace(%replace(%ex){'\n','\\n'}){'\t','\\t'}){'"','\\"'}%nopex"
+                    "throwable": "%replace(%replace(%replace(%ex){'\n','\\n'}){'\t','\\t'}){'"','\\"'}%nopex",
+                    "pod": "${HOSTNAME:-}"
                     }
                 </pattern>
             </layout>
