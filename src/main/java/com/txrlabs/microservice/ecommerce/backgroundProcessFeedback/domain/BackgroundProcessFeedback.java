@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "process")
-public class Process {
+public class BackgroundProcessFeedback {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
