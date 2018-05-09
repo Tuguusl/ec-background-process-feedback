@@ -30,6 +30,9 @@ public class Process {
     @Column(nullable=false)
     private ProcessStatus status;
 
+    @Column(columnDefinition = "text", name="error_message")
+    private String errorMessage;
+
     @Column(nullable=false, name="current_step")
     private Integer currentStep;
 
@@ -100,6 +103,14 @@ public class Process {
 
     public void setStatus(ProcessStatus status) {
         this.status = status;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public Integer getCurrentStep() {

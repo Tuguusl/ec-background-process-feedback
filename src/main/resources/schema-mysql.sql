@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `process` (
   `current_step` int(20) NOT NULL,
   `total_steps` int(20) NOT NULL,
   `status` ENUM('RUNNING', 'ERROR', 'SUCCESS') NOT NULL DEFAULT 'RUNNING',
+  `error_message` TEXT,
   `date_created` DATETIME NOT NULL,
   `last_updated` DATETIME NOT NULL,
   `created_by` VARCHAR(255) DEFAULT 'System',
