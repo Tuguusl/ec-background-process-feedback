@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '2.0.1.RELEASE'
+		springBootVersion = '1.5.9.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -49,7 +49,7 @@ repositories {
 }
 
 ext {
-	springCloudVersion = 'Finchley.RC1'
+	springCloudVersion = 'Edgware.RELEASE'
 }
 
 def getTreexorStarterPreauthVersion() {

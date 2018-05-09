@@ -17,11 +17,11 @@ public interface ProcessRepository extends CrudRepository<Process, Long> {
 
     @Override
     @PostAuthorize("hasRole('ROLE_MICROSERVICE') OR (hasRole('ROLE_PROCESS') AND (hasRole('ROLE_CROSS_CLIENT') OR returnObject.client == authentication.name))")
-    Optional<Process> findById(Long id);
+    Process findOne(Long id);
 
     @Override
     @PreAuthorize("hasAnyRole('ROLE_MICROSERVICE', 'ROLE_PROCESS')")
-    boolean existsById(Long id);
+    boolean exists(Long id);
 
     @Override
     @PostFilter("hasRole('ROLE_MICROSERVICE') OR (hasRole('ROLE_PROCESS') AND (hasRole('ROLE_CROSS_CLIENT') OR filterObject.client == authentication.name))")
@@ -29,7 +29,7 @@ public interface ProcessRepository extends CrudRepository<Process, Long> {
 
     @Override
     @PostFilter("hasRole('ROLE_MICROSERVICE') OR (hasRole('ROLE_PROCESS') AND (hasRole('ROLE_CROSS_CLIENT') OR filterObject.client == authentication.name))")
-    Iterable<Process> findAllById(Iterable<Long> ids);
+    Iterable<Process> findAll(Iterable<Long> ids);
 
     @Override
     @PreAuthorize("hasAnyRole('ROLE_MICROSERVICE', 'ROLE_PROCESS')")
