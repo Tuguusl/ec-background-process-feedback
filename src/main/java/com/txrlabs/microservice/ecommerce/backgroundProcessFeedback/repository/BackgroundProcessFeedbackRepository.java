@@ -16,7 +16,7 @@ import java.util.List;
 public interface BackgroundProcessFeedbackRepository extends CrudRepository<BackgroundProcessFeedback, Long> {
 
     @Override
-    @PostAuthorize("hasRole('ROLE_MICROSERVICE') OR (hasRole('ROLE_PROCESS') AND (hasRole('ROLE_CROSS_CLIENT') OR returnObject.client == authentication.name))")
+    @PreAuthorize("hasAnyRole('ROLE_MICROSERVICE', 'ROLE_PROCESS')")
     BackgroundProcessFeedback findOne(Long id);
 
     @Override
