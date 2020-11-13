@@ -73,7 +73,6 @@ dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-config')
 	compile('org.springframework.cloud:spring-cloud-starter-hystrix')
 	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-	compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile("org.springframework.cloud:spring-cloud-starter-bus-amqp")
 
@@ -84,7 +83,6 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 
 	compile('org.springframework.cloud:spring-cloud-starter-sleuth')
-	compile("org.springframework.cloud:spring-cloud-sleuth-zipkin")
 
 	compile("com.txrlabs.microservices:spring-boot-starter-treexor-metrics:1.1.17")
 	compile("com.txrlabs.microservices:cloudwatch-logging-spring-boot-starter:0.9")
