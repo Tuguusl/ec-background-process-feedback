@@ -89,7 +89,7 @@ dependencies {
 
 	compile('org.springframework.security:spring-security-data')
 	compile group: 'com.txrlabs.microservices',   name: 'ec-client-accounts-client2', version: getClientAccountsClientVersion()
-	compile group: 'com.txrlabs.microservices', name: 'spring-boot-starter-treexor-security-preauth', version: getTreexorStarterPreauthVersion()
+	compile group: 'com.txrlabs.microservices', name: 'spring-boot-starter-treexor-security', version: getTreexorStarterPreauthVersion()
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
